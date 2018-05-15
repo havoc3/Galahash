@@ -166,10 +166,8 @@ $('#algo_select').change(function(event)
 
 </td></tr></table>
 
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
 
 <script type="text/javascript">
 

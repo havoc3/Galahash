@@ -14,10 +14,6 @@ foreach($raw_recents as $addr) {
 }
 
 $address = getparam('address');
-if (!empty($address) && preg_match('/[^A-Za-z0-9]/', $address)) {
-	// Just to make happy XSS seekers who can hack their own browser html...
-	die;
-}
 
 $drop_address = getparam('drop');
 if (!empty($drop_address)) {
@@ -71,8 +67,9 @@ END;
 
 if($user) echo <<<END
 <div id='main_wallet_results'>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br>
 </div>
 END;
 
@@ -91,15 +88,17 @@ END;
 
 if($user) echo <<<END
 <div id='main_graphs_results'>
+<br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br>
 </div>
 END;
 
 if($user) echo <<<END
 <div id='main_miners_results'>
+<br><br><br><br><br><br><br>
 <br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br>
 </div>
 END;
 
@@ -153,14 +152,15 @@ echo "</td><td valign=top>";
 
 echo <<<END
 <div id='pool_current_results'>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br>
 </div>
 END;
 
 if($user) echo <<<END
 <div id='found_results'>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
 </div>
 END;
 
@@ -168,10 +168,7 @@ echo <<<END
 
 </td></tr></table>
 
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 <script>
 

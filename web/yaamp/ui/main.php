@@ -15,8 +15,8 @@ echo <<<END
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-<meta name="description" content="Yii mining pools for alternative crypto currencies">
-<meta name="keywords" content="anonymous,mining,pool,maxcoin,bitcoin,altcoin,auto,switch,exchange,profit,decred,scrypt,x11,x13,x14,x15,lbry,lyra2re,neoscrypt,sha256,quark,skein2">
+<meta name="description" content="Galahash - The galant mining pool!">
+<meta name="keywords" content="anonymous,mining,pool,trust,maxcoin,bitcoin,altcoin,auto,switch,exchange,profit,scrypt,x16r,x11,x13,x14,x15,lyra2re,neoscrypt,sha256,quark,skein2">
 
 END;
 
@@ -139,7 +139,7 @@ function showPageFooter()
 	$year = date("Y", time());
 
 	echo "<p>&copy; $year ".YAAMP_SITE_NAME.' - '.
-		'<a href="http://github.com/tpruvot/yiimp">Open source Project</a></p>';
+		'<a href="http://github.com/tpruvot/yiimp">Based on the Yiimp open source project</a></p>';
 
 	echo '</div><!-- footer -->';
 }
