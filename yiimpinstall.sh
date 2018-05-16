@@ -20,17 +20,25 @@ displayErr() {
 }
 
     output " "
-    output " "
-    read -e -p "Enter time zone (e.g. America/New_York) : " TIME
-    read -e -p "Server name (no http:// or www. just example.com) : " server_name
-    read -e -p "Are you using a subdomain (pool.example.com?) [y/N] : " sub_domain
-    read -e -p "Enter support email (e.g. admin@example.com) : " EMAIL
-    read -e -p "Set stratum to AutoExchange? i.e. mine any coinf with BTC address? [y/N] : " BTC
-    read -e -p "Please enter a new location for /site/adminRights this is to customize the admin entrance url (e.g. myAdminpanel) : " admin_panel
-    read -e -p "Enter your Public IP for admin access (http://www.whatsmyip.org/) : " Public
-    read -e -p "Install Fail2ban? [Y/n] : " install_fail2ban
-    read -e -p "Install UFW and configure ports? [Y/n] : " UFW
-    read -e -p "Install LetsEncrypt SSL? IMPORTANT! You MUST have your domain name pointed to this server prior to running the script!! [Y/n]: " ssl_install
+    output "Starting"
+#    read -e -p "Enter time zone (e.g. America/New_York) : " TIME
+     TIME='America/Halifax'
+#    read -e -p "Server name (no http:// or www. just example.com) : " server_name
+     Server_name='galahash.com'
+#    read -e -p "Are you using a subdomain (pool.example.com?) [y/N] : " sub_domain
+     sub_domain='N'
+#    read -e -p "Enter support email (e.g. admin@example.com) : " EMAIL
+#    read -e -p "Set stratum to AutoExchange? i.e. mine any coinf with BTC address? [y/N] : " BTC
+     BTC='N'
+#    read -e -p "Please enter a new location for /site/adminRights this is to customize the admin entrance url (e.g. myAdminpanel) : " admin_panel
+#    read -e -p "Enter your Public IP for admin access (http://www.whatsmyip.org/) : " Public
+     Public='45.2.200.5'
+#    read -e -p "Install Fail2ban? [Y/n] : " 
+     install_fail2ban='N'
+#    read -e -p "Install UFW and configure ports? [Y/n] : " 
+     UFW='y'
+    read -e -p "Install LetsEncrypt SSL? IMPORTANT! You MUST have your domain name pointed to this server prior to running the script!! [Y/n]: " 
+     
 
     output " "
     output "Updating system and installing required packages."
@@ -189,30 +197,30 @@ default         0;
     blckntifypass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     cd ~
     git clone https://github.com/havoc3/Galahash.git
-    cd $HOME/yiimp/blocknotify
+    cd $HOME/Galahash/blocknotify
     sudo sed -i 's/tu8tu5/'$blckntifypass'/' blocknotify.cpp
     read -e -p "check the msg here (y)" CHECK
     sudo make
-    cd $HOME/yiimp/stratum/iniparser
+    cd $HOME/Galahash/stratum/iniparser
     sudo make
-    cd $HOME/yiimp/stratum
+    cd $HOME/Galahash/stratum
     if [[ ("$BTC" == "y" || "$BTC" == "Y") ]]; then
-    sudo sed -i 's/CFLAGS += -DNO_EXCHANGE/#CFLAGS += -DNO_EXCHANGE/' $HOME/yiimp/stratum/Makefile
+    sudo sed -i 's/CFLAGS += -DNO_EXCHANGE/#CFLAGS += -DNO_EXCHANGE/' $HOME/Galahash/stratum/Makefile
     sudo make
     fi
     sudo make
-    cd $HOME/yiimp
-    sudo sed -i 's/AdminRights/'$admin_panel'/' $HOME/yiimp/web/yaamp/modules/site/SiteController.php
-    sudo cp -r $HOME/yiimp/web /var/
+    cd $HOME/Galahash
+    sudo sed -i 's/AdminRights/'$admin_panel'/' $HOME/Galahash/web/yaamp/modules/site/SiteController.php
+    sudo cp -r $HOME/Galahash/web /var/
     sudo mkdir -p /var/stratum
-    cd $HOME/yiimp/stratum
+    cd $HOME/Galahash/stratum
     sudo cp -a config.sample/. /var/stratum/config
     sudo cp -r stratum /var/stratum
     sudo cp -r run.sh /var/stratum
-    cd $HOME/yiimp
-    sudo cp -r $HOME/yiimp/bin/. /bin/
-    sudo cp -r $HOME/yiimp/blocknotify/blocknotify /usr/bin/
-    sudo cp -r $HOME/yiimp/blocknotify/blocknotify /var/stratum/
+    cd $HOME/Galahash
+    sudo cp -r $HOME/Galahash/bin/. /bin/
+    sudo cp -r $HOME/Galahash/blocknotify/blocknotify /usr/bin/
+    sudo cp -r $HOME/Galahash/blocknotify/blocknotify /var/stratum/
     sudo mkdir -p /etc/yiimp
     sudo mkdir -p /$HOME/backup/
     #fixing yiimp
@@ -734,7 +742,7 @@ define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
     sleep 3
 
     cd ~
-    cd yiimp/sql
+    cd Galahash/sql
 
     # import sql dump
     sudo zcat 2016-04-03-yaamp.sql.gz | sudo mysql --defaults-group-suffix=host1
@@ -874,7 +882,7 @@ sudo chmod -R 775 /var/web/yaamp/runtime
 sudo chmod -R 664 /root/backup/
 sudo chmod -R 644 /var/log/debug.log
 sudo chmod -R 775 /var/web/serverconfig.php
-sudo mv $HOME/yiimp/ $HOME/yiimp-install-only-do-not-run-commands-from-this-folder
+# sudo mv $HOME/Galahash/ $HOME/Galahash-install-only-do-not-run-commands-from-this-folder
 sudo service nginx restart
 sudo service php7.0-fpm reload
 
@@ -882,12 +890,8 @@ output " "
 output " "
 output " "
 output " "
-output "Whew that was fun, just some reminders. Your mysql information is saved in ~/.my.cnf. this installer did not directly install anything required to build coins."
+output "Mysql information is saved in ~/.my.cnf. this installer did not directly install anything required to build coins."
 output " "
-output "Please make sure to change your wallet addresses in the /var/web/serverconfig.php file."
+output "Change wallet addresses in the /var/web/serverconfig.php file."
 output " "
-output "Please make sure to add your public and private keys."
-output " "
-output "TUTO Youtube : https://www.youtube.com/watch?v=vdBCw6_cyig"
-output " "
-output " "
+output "Update public and private keys."
