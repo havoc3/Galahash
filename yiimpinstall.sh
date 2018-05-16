@@ -770,7 +770,6 @@ define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
     sudo mysql --defaults-group-suffix=host1 --force < 2018-02-coins_getinfo.sql
 
     output " "
-echo '
 #     output "Generating a basic serverconfig.php"
 #     output " "
 #     sleep 3
