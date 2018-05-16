@@ -14,7 +14,7 @@ web/images/*
 web/yaamp/runtime/*
 cookies/
 bin/blocknotif
-web/serverconfig.php
+
 web/assets/
 *.rej
 *.orig
