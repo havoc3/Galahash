@@ -1,10 +1,14 @@
 #!/bin/bash
 ################################################################################
-# Original Authors:   crombiecrunch manfromafar Xavatar
-# Current Galahash - Havoc3
-# # Program:
-#   Install yiimp on Ubuntu 16.04 running Nginx, MariaDB, and php7.x
+# Original Author:   crombiecrunch
+# Fork Author: manfromafar
+# Current Author: Xavatar
+# Web:     
 #
+# Program:
+#   Install yiimp on Ubuntu 16.04 running Nginx, MariaDB, and php7.x
+# 
+# 
 ################################################################################
 output() {
     printf "\E[0;33;40m"
@@ -20,54 +24,47 @@ displayErr() {
 }
 
     output " "
-    output "Starting"
-#    read -e -p "Enter time zone (e.g. America/New_York) : " TIME
-     TIME='America/Halifax'
-#    read -e -p "Server name (no http:// or www. just example.com) : " server_name
-     Server_name='galahash.com'
-#    read -e -p "Are you using a subdomain (pool.example.com?) [y/N] : " sub_domain
-     sub_domain='N'
-#    read -e -p "Enter support email (e.g. admin@example.com) : " EMAIL
-#    read -e -p "Set stratum to AutoExchange? i.e. mine any coinf with BTC address? [y/N] : " BTC
-     BTC='N'
-#    read -e -p "Please enter a new location for /site/adminRights this is to customize the admin entrance url (e.g. myAdminpanel) : " admin_panel
-#    read -e -p "Enter your Public IP for admin access (http://www.whatsmyip.org/) : " Public
-     Public='45.2.200.5'
-#    read -e -p "Install Fail2ban? [Y/n] : " 
-     install_fail2ban='N'
-#    read -e -p "Install UFW and configure ports? [Y/n] : " 
-     UFW='y'
-    read -e -p "Install LetsEncrypt SSL? IMPORTANT! You MUST have your domain name pointed to this server prior to running the script!! [Y/n]: " 
-     
-
+    output "Make sure you double check before hitting enter! Only one shot at these!"
+    output " "
+    read -e -p "Enter time zone (e.g. America/New_York) : " TIME
+    read -e -p "Server name (no http:// or www. just example.com) : " server_name
+    read -e -p "Are you using a subdomain (pool.example.com?) [y/N] : " sub_domain
+    read -e -p "Enter support email (e.g. admin@example.com) : " EMAIL
+    read -e -p "Set stratum to AutoExchange? i.e. mine any coinf with BTC address? [y/N] : " BTC
+    read -e -p "Please enter a new location for /site/adminRights this is to customize the admin entrance url (e.g. myAdminpanel) : " admin_panel
+    read -e -p "Enter your Public IP for admin access (http://www.whatsmyip.org/) : " Public
+    read -e -p "Install Fail2ban? [Y/n] : " install_fail2ban
+    read -e -p "Install UFW and configure ports? [Y/n] : " UFW
+    read -e -p "Install LetsEncrypt SSL? IMPORTANT! You MUST have your domain name pointed to this server prior to running the script!! [Y/n]: " ssl_install
+    
     output " "
     output "Updating system and installing required packages."
     output " "
     sleep 3
-
-
+    
+    
     # update package and upgrade Ubuntu
-    sudo apt-get -y update
+    sudo apt-get -y update 
     sudo apt-get -y upgrade
     sudo apt-get -y autoremove
-
+    
     output " "
     output "Switching to Aptitude"
     output " "
     sleep 3
-
+    
     sudo apt-get -y install aptitude
-
+    
     output " "
     output "Installing Nginx server."
     output " "
     sleep 3
-
+    
     sudo aptitude -y install nginx
     sudo rm /etc/nginx/sites-enabled/default
     sudo service nginx start
     sudo service cron start
-
+	
 
     #Making Nginx a bit hard
     echo 'map $http_user_agent $blockedagent {
@@ -79,23 +76,23 @@ default         0;
 ~*bandit        1;
 }
 ' | sudo -E tee /etc/nginx/blockuseragents.rules >/dev/null 2>&1
-
+    
     output " "
     output "Installing Mariadb Server."
     output " "
     sleep 3
-
-
+    
+    
     # create random password
     rootpasswd=$(openssl rand -base64 12)
     export DEBIAN_FRONTEND="noninteractive"
     sudo aptitude -y install mariadb-server
-
+    
     output " "
     output "Installing php7.x and other needed files"
     output " "
     sleep 3
-
+    
     sudo aptitude -y install php7.0-fpm
     sudo aptitude -y install php7.0-opcache php7.0-fpm php7.0 php7.0-common php7.0-gd php7.0-mysql php7.0-imap php7.0-cli php7.0-cgi php-pear php-auth php7.0-mcrypt mcrypt imagemagick libruby php7.0-curl php7.0-intl php7.0-pspell php7.0-recode php7.0-sqlite3 php7.0-tidy php7.0-xmlrpc php7.0-xsl memcached php-memcache php-imagick php-gettext php7.0-zip php7.0-mbstring
     sudo phpenmod mcrypt
@@ -119,7 +116,7 @@ default         0;
     output "Installing Package to compile crypto currency"
     output " "
     sleep 3
-
+    
     sudo aptitude -y install software-properties-common build-essential
     sudo aptitude -y install libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils git cmake libboost-all-dev zlib1g-dev libz-dev libseccomp-dev libcap-dev libminiupnpc-dev
     sudo aptitude -y install libminiupnpc10 libzmq5
@@ -128,18 +125,18 @@ default         0;
     sudo add-apt-repository -y ppa:bitcoin/bitcoin
     sudo apt-get -y update
     sudo apt-get install -y libdb4.8-dev libdb4.8++-dev libdb5.3 libdb5.3++
-
-
+       
+    
     #Generating Random Passwords
     password=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     password2=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     AUTOGENERATED_PASS=`pwgen -c -1 20`
-
+    
     output " "
     output "Testing to see if server emails are sent"
     output " "
     sleep 3
-
+    
     if [[ "$root_email" != "" ]]; then
     echo $root_email > sudo tee --append ~/.email
     echo $root_email > sudo tee --append ~/.forward
@@ -155,13 +152,13 @@ default         0;
         echo "Mail sent"
     fi
     fi
-
+    
     output " "
     output "Some optional installs"
     output " "
     sleep 3
-
-
+    
+    
     if [[ ("$install_fail2ban" == "y" || "$install_fail2ban" == "Y" || "$install_fail2ban" == "") ]]; then
     sudo aptitude -y install fail2ban
     fi
@@ -172,15 +169,68 @@ default         0;
     sudo ufw allow ssh
     sudo ufw allow http
     sudo ufw allow https
-	
-    sudo ufw --force enable
+	sudo ufw allow 3333/tcp
+	sudo ufw allow 3339/tcp
+	sudo ufw allow 3334/tcp
+	sudo ufw allow 3433/tcp
+	sudo ufw allow 3555/tcp
+	sudo ufw allow 3556/tcp
+	sudo ufw allow 3573/tcp
+	sudo ufw allow 3535/tcp
+	sudo ufw allow 3533/tcp
+	sudo ufw allow 3553/tcp
+	sudo ufw allow 3633/tcp
+	sudo ufw allow 3733/tcp
+	sudo ufw allow 3636/tcp
+	sudo ufw allow 3737/tcp
+	sudo ufw allow 3739/tcp
+	sudo ufw allow 3747/tcp
+	sudo ufw allow 3833/tcp
+	sudo ufw allow 3933/tcp
+	sudo ufw allow 4033/tcp
+	sudo ufw allow 4133/tcp
+	sudo ufw allow 4233/tcp
+	sudo ufw allow 4234/tcp
+	sudo ufw allow 4333/tcp
+	sudo ufw allow 4433/tcp
+	sudo ufw allow 4533/tcp
+	sudo ufw allow 4553/tcp
+	sudo ufw allow 4633/tcp
+	sudo ufw allow 4733/tcp
+	sudo ufw allow 4833/tcp
+	sudo ufw allow 4933/tcp
+	sudo ufw allow 5033/tcp
+	sudo ufw allow 5133/tcp
+	sudo ufw allow 5233/tcp
+	sudo ufw allow 5333/tcp
+	sudo ufw allow 5433/tcp
+	sudo ufw allow 5533/tcp
+	sudo ufw allow 5733/tcp
+	sudo ufw allow 5743/tcp
+	sudo ufw allow 3252/tcp
+	sudo ufw allow 5755/tcp
+	sudo ufw allow 5766/tcp
+	sudo ufw allow 5833/tcp
+	sudo ufw allow 5933/tcp
+	sudo ufw allow 6033/tcp
+	sudo ufw allow 5034/tcp
+	sudo ufw allow 6133/tcp
+	sudo ufw allow 6233/tcp
+	sudo ufw allow 6333/tcp
+	sudo ufw allow 6433/tcp
+	sudo ufw allow 7433/tcp
+	sudo ufw allow 8333/tcp
+	sudo ufw allow 8463/tcp
+	sudo ufw allow 8433/tcp
+	sudo ufw allow 8533/tcp
+    sudo ufw --force enable    
     fi
-
+    
     output " "
     output "Installing phpmyadmin"
     output " "
     sleep 3
-
+    
     echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect" | sudo debconf-set-selections
     echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | sudo debconf-set-selections
     echo "phpmyadmin phpmyadmin/mysql/admin-user string root" | sudo debconf-set-selections
@@ -188,39 +238,42 @@ default         0;
     echo "phpmyadmin phpmyadmin/mysql/app-pass password $AUTOGENERATED_PASS" | sudo debconf-set-selections
     echo "phpmyadmin phpmyadmin/app-password-confirm password $AUTOGENERATED_PASS" | sudo debconf-set-selections
     sudo aptitude -y install phpmyadmin
-
+	
     output " "
-    output " Installing Galahash"
+    output " Installing yiimp"
     output " "
+    output "Grabbing yiimp fron Github, building files and setting file structure."
+    output " "
+    sleep 3
+    
     
     #Generating Random Password for stratum
     blckntifypass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
     cd ~
-    git clone https://github.com/havoc3/Galahash.git
-    cd $HOME/Galahash/blocknotify
+    git clone https://github.com/tpruvot/yiimp.git
+    cd $HOME/yiimp/blocknotify
     sudo sed -i 's/tu8tu5/'$blckntifypass'/' blocknotify.cpp
-    read -e -p "check the msg here (y)" CHECK
     sudo make
-    cd $HOME/Galahash/stratum/iniparser
+    cd $HOME/yiimp/stratum/iniparser
     sudo make
-    cd $HOME/Galahash/stratum
+    cd $HOME/yiimp/stratum
     if [[ ("$BTC" == "y" || "$BTC" == "Y") ]]; then
-    sudo sed -i 's/CFLAGS += -DNO_EXCHANGE/#CFLAGS += -DNO_EXCHANGE/' $HOME/Galahash/stratum/Makefile
+    sudo sed -i 's/CFLAGS += -DNO_EXCHANGE/#CFLAGS += -DNO_EXCHANGE/' $HOME/yiimp/stratum/Makefile
     sudo make
     fi
     sudo make
-    cd $HOME/Galahash
-    sudo sed -i 's/AdminRights/'$admin_panel'/' $HOME/Galahash/web/yaamp/modules/site/SiteController.php
-    sudo cp -r $HOME/Galahash/web /var/
+    cd $HOME/yiimp
+    sudo sed -i 's/AdminRights/'$admin_panel'/' $HOME/yiimp/web/yaamp/modules/site/SiteController.php
+    sudo cp -r $HOME/yiimp/web /var/
     sudo mkdir -p /var/stratum
-    cd $HOME/Galahash/stratum
+    cd $HOME/yiimp/stratum
     sudo cp -a config.sample/. /var/stratum/config
     sudo cp -r stratum /var/stratum
     sudo cp -r run.sh /var/stratum
-    cd $HOME/Galahash
-    sudo cp -r $HOME/Galahash/bin/. /bin/
-    sudo cp -r $HOME/Galahash/blocknotify/blocknotify /usr/bin/
-    sudo cp -r $HOME/Galahash/blocknotify/blocknotify /var/stratum/
+    cd $HOME/yiimp
+    sudo cp -r $HOME/yiimp/bin/. /bin/
+    sudo cp -r $HOME/yiimp/blocknotify/blocknotify /usr/bin/
+    sudo cp -r $HOME/yiimp/blocknotify/blocknotify /var/stratum/
     sudo mkdir -p /etc/yiimp
     sudo mkdir -p /$HOME/backup/
     #fixing yiimp
@@ -244,24 +297,24 @@ sudo chmod +x /var/stratum/config/run.sh
     output " "
     output "Update default timezone."
     output " "
-
+    
     # check if link file
     sudo [ -L /etc/localtime ] &&  sudo unlink /etc/localtime
-
+    
     # update time zone
     sudo ln -sf /usr/share/zoneinfo/$TIME /etc/localtime
     sudo aptitude -y install ntpdate
-
+    
     # write time to clock.
     sudo hwclock -w
-
+    
     output " "
     output "Making Web Server Magic Happen!"
     output " "
     # adding user to group, creating dir structure, setting permissions
-    sudo mkdir -p /var/www/$server_name/html
-
-
+    sudo mkdir -p /var/www/$server_name/html 
+    
+    
     output " "
     output "Creating webserver initial config file"
     output " "
@@ -280,27 +333,27 @@ sudo chmod +x /var/stratum/config/run.sh
         root "/var/www/'"${server_name}"'/html/web";
         index index.html index.htm index.php;
         charset utf-8;
-
+    
         location / {
         try_files $uri $uri/ /index.php?$args;
         }
         location @rewrite {
         rewrite ^/(.*)$ /index.php?r=$1;
         }
-
+    
         location = /favicon.ico { access_log off; log_not_found off; }
         location = /robots.txt  { access_log off; log_not_found off; }
-
+    
         access_log off;
         error_log  /var/log/nginx/'"${server_name}"'.app-error.log error;
-
+    
         # allow larger file uploads and longer script runtimes
  	client_body_buffer_size  50k;
         client_header_buffer_size 50k;
         client_max_body_size 50k;
         large_client_header_buffers 2 50k;
         sendfile off;
-
+    
         location ~ ^/index\.php$ {
             fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
@@ -348,11 +401,11 @@ sudo chmod +x /var/stratum/config/run.sh
     sudo ln -s /var/web /var/www/$server_name/html
     sudo service nginx restart
     if [[ ("$ssl_install" == "y" || "$ssl_install" == "Y" || "$ssl_install" == "") ]]; then
-
+    
     output " "
     output "Install LetsEncrypt and setting SSL"
     output " "
-
+    
     sudo aptitude -y install letsencrypt
     sudo letsencrypt certonly -a webroot --webroot-path=/var/web --email "$EMAIL" --agree-tos -d "$server_name"
     sudo rm /etc/nginx/sites-available/$server_name.conf
@@ -372,7 +425,7 @@ sudo chmod +x /var/stratum/config/run.sh
     	# enforce https
         return 301 https://$server_name$request_uri;
 	}
-
+	
 	server {
 	if ($blockedagent) {
                 return 403;
@@ -383,20 +436,20 @@ sudo chmod +x /var/stratum/config/run.sh
             listen 443 ssl http2;
             listen [::]:443 ssl http2;
             server_name '"${server_name}"';
-
+        
             root /var/www/'"${server_name}"'/html/web;
             index index.php;
-
+        
             access_log /var/log/nginx/'"${server_name}"'.app-accress.log;
             error_log  /var/log/nginx/'"${server_name}"'.app-error.log error;
-
+        
             # allow larger file uploads and longer script runtimes
  	client_body_buffer_size  50k;
         client_header_buffer_size 50k;
         client_max_body_size 50k;
         large_client_header_buffers 2 50k;
         sendfile off;
-
+        
             # strengthen ssl security
             ssl_certificate /etc/letsencrypt/live/'"${server_name}"'/fullchain.pem;
             ssl_certificate_key /etc/letsencrypt/live/'"${server_name}"'/privkey.pem;
@@ -405,22 +458,22 @@ sudo chmod +x /var/stratum/config/run.sh
             ssl_session_cache shared:SSL:10m;
             ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:ECDHE-RSA-AES128-GCM-SHA256:AES256+EECDH:DHE-RSA-AES128-GCM-SHA256:AES256+EDH:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
             ssl_dhparam /etc/ssl/certs/dhparam.pem;
-
+        
             # Add headers to serve security related headers
             add_header Strict-Transport-Security "max-age=15768000; preload;";
             add_header X-Content-Type-Options nosniff;
             add_header X-XSS-Protection "1; mode=block";
             add_header X-Robots-Tag none;
             add_header Content-Security-Policy "frame-ancestors 'self'";
-
+        
         location / {
         try_files $uri $uri/ /index.php?$args;
         }
         location @rewrite {
         rewrite ^/(.*)$ /index.php?r=$1;
         }
-
-
+    
+        
             location ~ ^/index\.php$ {
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
                 fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
@@ -442,7 +495,7 @@ sudo chmod +x /var/stratum/config/run.sh
 		location ~ \.sh {
 		return 404;
         }
-
+        
             location ~ /\.ht {
                 deny all;
             }
@@ -461,7 +514,7 @@ sudo chmod +x /var/stratum/config/run.sh
   	}
  }
  }
-
+        
 ' | sudo -E tee /etc/nginx/sites-available/$server_name.conf >/dev/null 2>&1
 	fi
 	sudo service nginx restart
@@ -481,27 +534,27 @@ sudo chmod +x /var/stratum/config/run.sh
         root "/var/www/'"${server_name}"'/html/web";
         index index.html index.htm index.php;
         charset utf-8;
-
+    
         location / {
         try_files $uri $uri/ /index.php?$args;
         }
         location @rewrite {
         rewrite ^/(.*)$ /index.php?r=$1;
         }
-
+    
         location = /favicon.ico { access_log off; log_not_found off; }
         location = /robots.txt  { access_log off; log_not_found off; }
-
+    
         access_log off;
         error_log  /var/log/nginx/'"${server_name}"'.app-error.log error;
-
+    
         # allow larger file uploads and longer script runtimes
  	client_body_buffer_size  50k;
         client_header_buffer_size 50k;
         client_max_body_size 50k;
         large_client_header_buffers 2 50k;
         sendfile off;
-
+    
         location ~ ^/index\.php$ {
             fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
@@ -549,12 +602,12 @@ sudo chmod +x /var/stratum/config/run.sh
     sudo ln -s /var/web /var/www/$server_name/html
     sudo service nginx restart
     if [[ ("$ssl_install" == "y" || "$ssl_install" == "Y" || "$ssl_install" == "") ]]; then
-
+    
     output " "
     output "Install LetsEncrypt and setting SSL"
     output " "
     sleep 3
-
+    
     sudo aptitude -y install letsencrypt
     sudo letsencrypt certonly -a webroot --webroot-path=/var/web --email "$EMAIL" --agree-tos -d "$server_name" -d www."$server_name"
     sudo rm /etc/nginx/sites-available/$server_name.conf
@@ -574,7 +627,7 @@ sudo chmod +x /var/stratum/config/run.sh
     	# enforce https
         return 301 https://$server_name$request_uri;
 	}
-
+	
 	server {
 	if ($blockedagent) {
                 return 403;
@@ -585,20 +638,20 @@ sudo chmod +x /var/stratum/config/run.sh
             listen 443 ssl http2;
             listen [::]:443 ssl http2;
             server_name '"${server_name}"' www.'"${server_name}"';
-
+        
             root /var/www/'"${server_name}"'/html/web;
             index index.php;
-
+        
             access_log /var/log/nginx/'"${server_name}"'.app-accress.log;
             error_log  /var/log/nginx/'"${server_name}"'.app-error.log error;
-
+        
             # allow larger file uploads and longer script runtimes
  	client_body_buffer_size  50k;
         client_header_buffer_size 50k;
         client_max_body_size 50k;
         large_client_header_buffers 2 50k;
         sendfile off;
-
+        
             # strengthen ssl security
             ssl_certificate /etc/letsencrypt/live/'"${server_name}"'/fullchain.pem;
             ssl_certificate_key /etc/letsencrypt/live/'"${server_name}"'/privkey.pem;
@@ -607,22 +660,22 @@ sudo chmod +x /var/stratum/config/run.sh
             ssl_session_cache shared:SSL:10m;
             ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:ECDHE-RSA-AES128-GCM-SHA256:AES256+EECDH:DHE-RSA-AES128-GCM-SHA256:AES256+EDH:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
             ssl_dhparam /etc/ssl/certs/dhparam.pem;
-
+        
             # Add headers to serve security related headers
             add_header Strict-Transport-Security "max-age=15768000; preload;";
             add_header X-Content-Type-Options nosniff;
             add_header X-XSS-Protection "1; mode=block";
             add_header X-Robots-Tag none;
             add_header Content-Security-Policy "frame-ancestors 'self'";
-
+        
         location / {
         try_files $uri $uri/ /index.php?$args;
         }
         location @rewrite {
         rewrite ^/(.*)$ /index.php?r=$1;
         }
-
-
+    
+        
             location ~ ^/index\.php$ {
                 fastcgi_split_path_info ^(.+\.php)(/.+)$;
                 fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
@@ -644,7 +697,7 @@ sudo chmod +x /var/stratum/config/run.sh
 		location ~ \.sh {
 		return 404;
         }
-
+        
             location ~ /\.ht {
                 deny all;
             }
@@ -663,33 +716,33 @@ sudo chmod +x /var/stratum/config/run.sh
   	}
  }
  }
-
+        
 ' | sudo -E tee /etc/nginx/sites-available/$server_name.conf >/dev/null 2>&1
 	fi
 	sudo service nginx restart
 	sudo service php7.0-fpm reload
 	fi
-
+    
     output " "
     output "Now for the database fun!"
     output " "
     sleep 3
-
+    
     # create database
     Q1="CREATE DATABASE IF NOT EXISTS yiimpfrontend;"
     Q2="GRANT ALL ON *.* TO 'panel'@'localhost' IDENTIFIED BY '$password';"
     Q3="FLUSH PRIVILEGES;"
     SQL="${Q1}${Q2}${Q3}"
     sudo mysql -u root -p="" -e "$SQL"
-
+    
     # create stratum user
     Q1="GRANT ALL ON *.* TO 'stratum'@'localhost' IDENTIFIED BY '$password2';"
     Q2="FLUSH PRIVILEGES;"
     SQL="${Q1}${Q2}"
-    sudo mysql -u root -p="" -e "$SQL"
-
+    sudo mysql -u root -p="" -e "$SQL"  
+    
     #Create my.cnf
-
+    
  echo '
 [clienthost1]
 user=panel
@@ -711,7 +764,7 @@ password='"${rootpasswd}"'
       sudo chmod 0600 ~/.my.cnf
 
 #Create keys file
-  echo '
+  echo '  
     <?php
 /* Sample config file to put in /etc/yiimp/keys.php */
 define('"'"'YIIMP_MYSQLDUMP_USER'"'"', '"'"'panel'"'"');
@@ -732,21 +785,21 @@ define('"'"'EXCH_NOVA_SECRET'"'"','"'"''"'"');
 define('"'"'EXCH_POLONIEX_SECRET'"'"', '"'"''"'"');
 define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
 ' | sudo -E tee /etc/yiimp/keys.php >/dev/null 2>&1
-
-
+ 
+ 
     output " "
     output "Database 'yiimpfrontend' and users 'panel' and 'stratum' created with password $password and $password2, will be saved for you"
     output " "
     output "Peforming the SQL import"
     output " "
     sleep 3
-
+    
     cd ~
-    cd Galahash/sql
-
+    cd yiimp/sql
+    
     # import sql dump
     sudo zcat 2016-04-03-yaamp.sql.gz | sudo mysql --defaults-group-suffix=host1
-
+    
     # oh the humanity!
     sudo mysql --defaults-group-suffix=host1 --force < 2016-04-24-market_history.sql
     sudo mysql --defaults-group-suffix=host1 --force < 2016-04-27-settings.sql
@@ -765,12 +818,12 @@ define('"'"'EXCH_YOBIT_SECRET'"'"', '"'"''"'"');
     sudo mysql --defaults-group-suffix=host1 --force < 2017-11-segwit.sql
     sudo mysql --defaults-group-suffix=host1 --force < 2018-01-stratums_ports.sql
     sudo mysql --defaults-group-suffix=host1 --force < 2018-02-coins_getinfo.sql
-
+     
     output " "
     output "Generating a basic serverconfig.php"
     output " "
     sleep 3
-
+    
     # make config file
 echo '
 <?php
@@ -882,7 +935,7 @@ sudo chmod -R 775 /var/web/yaamp/runtime
 sudo chmod -R 664 /root/backup/
 sudo chmod -R 644 /var/log/debug.log
 sudo chmod -R 775 /var/web/serverconfig.php
-# sudo mv $HOME/Galahash/ $HOME/Galahash-install-only-do-not-run-commands-from-this-folder
+sudo mv $HOME/yiimp/ $HOME/yiimp-install-only-do-not-run-commands-from-this-folder
 sudo service nginx restart
 sudo service php7.0-fpm reload
 
@@ -890,8 +943,12 @@ output " "
 output " "
 output " "
 output " "
-output "Mysql information is saved in ~/.my.cnf. this installer did not directly install anything required to build coins."
+output "Whew that was fun, just some reminders. Your mysql information is saved in ~/.my.cnf. this installer did not directly install anything required to build coins."
 output " "
-output "Change wallet addresses in the /var/web/serverconfig.php file."
+output "Please make sure to change your wallet addresses in the /var/web/serverconfig.php file."
 output " "
-output "Update public and private keys."
+output "Please make sure to add your public and private keys."
+output " "
+output "TUTO Youtube : https://www.youtube.com/watch?v=vdBCw6_cyig"
+output " "
+output " "

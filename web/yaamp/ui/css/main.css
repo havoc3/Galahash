@@ -5,14 +5,11 @@
 @import url("news.css");
 @import url("objectmenu.css");
 
-
 body
 {
 	font: normal 10pt Arial,Helvetica,sans-serif;
-	background: url(/images/Galogo1crop.png) no-repeat center;
-        background-size: 1000px;
-        background-color: white;
-	color: #211b09;
+	background-color: white;
+	color: #444;
 	text-align: left;
 	margin: 0;
 	padding: 0;
@@ -21,7 +18,7 @@ body
 
 a, a:visited
 {
-	color: #8c7636;
+	color: #306495;
 	background: inherit;
 	text-decoration: none;
 }
@@ -65,7 +62,7 @@ hr
 	position: fixed;
 	right: 10px;
 	top: 0px;
-	color: #938454;
+	color: #ccc;
 	z-index: 10;
 	font-size: 1.0em;
 }
@@ -79,7 +76,7 @@ hr
 
 .page .headermenu a
 {
-	color: #938454;
+	color: #ccc;
 	text-decoration: none;
 }
 
@@ -93,7 +90,7 @@ hr
 	left: 0px;
 	z-index: 8;
 	height: 40px;
-	color: #776a41;
+	color: #aaa;
 
 	background-image: url(/images/base/top_header.png);
 	background-repeat: repeat-x;
@@ -113,12 +110,12 @@ hr
 {
 	text-decoration: none;
 	padding: 10px;
-	color: #776a41;
+	color: #aaa;
 }
 
 .page .tabmenu-inner .selected
 {
-	color: #c4b37f;
+	color: #eee;
 	border: 1px solid #181818;
 	background-image: url(/images/base/top_header_selected.png);
 	background-repeat: repeat-x;
@@ -152,8 +149,8 @@ hr
 	font-weight: bold;
 	text-align: center;
 	padding: 10px;
-	background-color: #feffc9;
-	color: #211b09;
+	background-color: #ccc;
+	color: #333;
 }
 
 .page .footer p
@@ -166,14 +163,14 @@ hr
 
 .main-left-box
 {
-	border: 1px solid #3c3d23;
+	border: 1px solid #e8e8e8;
 	border-radius: 5px;
 }
 
 .main-left-title
 {
 	padding: 8px;
-	background-color: #a4a56a;
+	background-color: #e5e5e5;
 	font-weight: bold;
 }
 
@@ -198,7 +195,7 @@ hr
 .main-text-input
 {
 	width: 98%;
-	border: 1px solid #211b09;
+	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 5px;
 }
@@ -206,7 +203,7 @@ hr
 .main-submit-button
 {
 	width: 80px;
-	border: 1px solid #211b09;
+	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 5px;
 }

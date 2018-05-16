@@ -149,11 +149,7 @@ if(isset($block['previousblockhash']) && $coin->algo == 'x16r') {
 		substr($block['previousblockhash'], -16).
 	'</span></td></tr>';
 }
-if(isset($block['previousblockhash']) && $coin->algo == 'x16s') {
-        echo '<tr><td>Hash order:</td><td><span class="monospace">'.
-                substr($block['previousblockhash'], -16).
-        '</span></td></tr>';
-}
+
 if(isset($block['previousblockhash']))
 	echo '<tr><td>Previous Hash:</td><td><span class="monospace">'.
 		$coin->createExplorerLink($block['previousblockhash'], array('hash'=>$block['previousblockhash'])).
