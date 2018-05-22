@@ -32,6 +32,7 @@ displayErr() {
 #    read -e -p "Set stratum to AutoExchange? i.e. mine any coinf with BTC address? [y/N] : " BTC
      BTC='N'
 #    read -e -p "Please enter a new location for /site/adminRights this is to customize the admin entrance url (e.g. myAdminpanel) : " admin_panel
+     admin_panel='bobpanel'
 #    read -e -p "Enter your Public IP for admin access (http://www.whatsmyip.org/) : " Public
      Public='45.2.200.5'
 #    read -e -p "Install Fail2ban? [Y/n] : "
